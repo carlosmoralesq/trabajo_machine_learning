@@ -180,3 +180,55 @@ Prediction <- prediction(DTPrediction[2],test.data$SEXO)
 aucDT <- performance(Prediction, measure = "auc")
 aucDT <- aucDT@y.values[[1]]
 aucDT
+
+
+# Modelo de máquina de soporte vectorial (SVM) ----------------------------
+
+#Carga de paquetes y librerías necesarios.
+
+install.packages("MASS")
+install.packages("e1071")
+
+#Carga de las librerías necesarias.
+
+library(MASS)
+library(e1071)
+
+#Carga de los datos necesarios para el modelo.
+
+data(iris)
+datos <- data
+View(datos)
+
+#Selección de una submuestra del 70% de los datos.
+
+set.seed(101)
+tamano.total <- nrow(datos)
+tamano.entreno <- round(tamano.total*0.7)
+datos.indices <- sample(1:tamano.total , size=tamano.entreno)
+datos.entreno <- datos[datos.indices,]
+datos.test <- datos[-datos.indices,]
+
+#Ejecución del modelo SVM.
+
+modelo <- svm(Species~., data=datos.entreno)
+
+#Predicción de los restantes.
+
+prediccion <- predict(modelo,new=datos.test)
+
+#Tabla de confusión. Se usa with para que aparezca el nombre de la variable Species en ella # ya que en caso contrario no sale.
+
+(mc <- with(datos.test,(table(prediccion,Species))))
+
+##             Species
+## prediccion   setosa versicolor virginica
+##   setosa         15          0         0
+##   versicolor      0         11         2
+##   virginica       0          1        16
+
+# correctamente classificados.
+
+(correctos <- sum(diag(mc)) / nrow(datos.test) *100)
+
+
