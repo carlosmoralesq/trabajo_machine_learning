@@ -62,3 +62,14 @@ test.data <- data[-trainIndex, ]
 
 # control parameters
 trctrl <- trainControl(method = "cv", classProbs = TRUE)
+
+set.seed(2345)
+# fitting decision tree classification model
+DTModel <- train(SEXO ~ ., 
+                 data = train.data, 
+                 method = "rpart",
+                 metric = "ROC",
+                 parms  = list(split = "information"), 
+                 trControl = trctrl)
+# model summary
+DTModel
