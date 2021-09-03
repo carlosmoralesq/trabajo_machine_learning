@@ -199,13 +199,15 @@ library(e1071)
 
 #Ejecución del modelo SVM.
 
-modelo <- svm(SEXO~., data=train.data)
+modelo <- svm(SEXO~., data = train.data)
 
 #Predicción de los restantes.
 
 prediccion <- predict(modelo,new=test.data)
 
-#Tabla de confusión. Se usa with para que aparezca el nombre de la variable Species en ella # ya que en caso contrario no sale.
+print(modelo)
+
+#Tabla de confusión. Se usa with para que aparezca el nombre de la variable SEXO en ella # ya que en caso contrario no sale.
 
 (mc <- with(test.data,(table(prediccion,SEXO))))
 
