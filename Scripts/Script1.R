@@ -1,12 +1,8 @@
-# Preparamos el espacio de trabajo ------------------------------------------------------------
-
-# Instalamos paquetes (si no están en el sistema)
-# install.packages("data.table")
-
-# Cargamos paquetes
-library(data.table)
-
+# Preparamos el espacio de trabajo
 # Cargamos los datos --------------------------------------------------------------------------
+
+library(data.table
+        )
 
 data <- fread(
   # Ubicación del archivo
@@ -78,6 +74,7 @@ DTModel <- train(SEXO ~ .,
 print(DTModel)
 
 # Graficamos el arbol de descisión
+install.packages('rpart')
 library(rpart.plot)
 prp(DTModel$finalModel, box.palette = "Reds", tweak = 1.2, varlen = 20)
 
@@ -194,41 +191,25 @@ install.packages("e1071")
 library(MASS)
 library(e1071)
 
-#Carga de los datos necesarios para el modelo.
+#Se utilizan los datos cargados para el modelo.
 
-data(iris)
-datos <- data
-View(datos)
 
-#Selección de una submuestra del 70% de los datos.
+#Se utiliza la submuestra seleccionada del 80% de los datos.
 
-set.seed(101)
-tamano.total <- nrow(datos)
-tamano.entreno <- round(tamano.total*0.7)
-datos.indices <- sample(1:tamano.total , size=tamano.entreno)
-datos.entreno <- datos[datos.indices,]
-datos.test <- datos[-datos.indices,]
 
 #Ejecución del modelo SVM.
 
-modelo <- svm(Species~., data=datos.entreno)
+modelo <- svm(SEXO~., data=train.data)
 
 #Predicción de los restantes.
 
-prediccion <- predict(modelo,new=datos.test)
+prediccion <- predict(modelo,new=test.data)
 
 #Tabla de confusión. Se usa with para que aparezca el nombre de la variable Species en ella # ya que en caso contrario no sale.
 
-(mc <- with(datos.test,(table(prediccion,Species))))
-
-##             Species
-## prediccion   setosa versicolor virginica
-##   setosa         15          0         0
-##   versicolor      0         11         2
-##   virginica       0          1        16
+(mc <- with(test.data,(table(prediccion,SEXO))))
 
 # correctamente classificados.
 
-(correctos <- sum(diag(mc)) / nrow(datos.test) *100)
-
+(correctos <- sum(diag(mc)) / nrow(test.data) *100)
 
